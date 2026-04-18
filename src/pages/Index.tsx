@@ -593,13 +593,115 @@ const VERIF_STEPS = [
   { id: 2, title: "Личные данные", desc: "ФИО, дата рождения, гражданство", status: "done", icon: "User" },
   { id: 3, title: "Удостоверение личности", desc: "Загрузите паспорт или иной документ", status: "done", icon: "CreditCard" },
   { id: 4, title: "Проверка лица (Liveness)", desc: "Сделайте селфи для биометрического сравнения", status: "pending", icon: "Camera" },
-  { id: 5, title: "Налоговый статус", desc: "ИНН и статус налогоплательщика", status: "pending", icon: "Receipt" },
-  { id: 6, title: "Банковские реквизиты", desc: "Привяжите расчётный счёт для транзакций", status: "locked", icon: "Building2" },
+  { id: 5, title: "Резюме (CV)", desc: "Загрузите резюме в формате PDF или заполните профиль вручную", status: "pending", icon: "FileText" },
+  { id: 6, title: "Портфолио проектов", desc: "Добавьте до 10 завершённых проектов с описанием и результатами", status: "pending", icon: "Briefcase" },
+  { id: 7, title: "Налоговый статус", desc: "ИНН и статус налогоплательщика", status: "locked", icon: "Receipt" },
+  { id: 8, title: "Банковские реквизиты", desc: "Привяжите расчётный счёт для транзакций", status: "locked", icon: "Building2" },
 ];
+
+const PORTFOLIO_ITEMS = [
+  { title: "CRM-система для ритейла", category: "Fintech", year: "2024", result: "Сократил время обработки заказов на 40%" },
+  { title: "Мобильное приложение доставки", category: "Logistics", year: "2023", result: "100K+ активных пользователей" },
+];
+
+function CVPanel() {
+  return (
+    <div className="mt-4 border-t border-border/50 pt-4 space-y-4 animate-fade-in-up" style={{ opacity: 0 }}>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="text-xs text-muted-foreground mb-1.5 block">Должность / специализация</label>
+          <input className="w-full glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent" placeholder="Например: Full-stack разработчик" />
+        </div>
+        <div>
+          <label className="text-xs text-muted-foreground mb-1.5 block">Опыт работы</label>
+          <select className="w-full glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-background text-foreground">
+            <option>1–2 года</option>
+            <option>3–5 лет</option>
+            <option>5–10 лет</option>
+            <option>10+ лет</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label className="text-xs text-muted-foreground mb-1.5 block">Ключевые навыки</label>
+        <input className="w-full glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent" placeholder="React, Python, PostgreSQL, Docker..." />
+      </div>
+      <div>
+        <label className="text-xs text-muted-foreground mb-1.5 block">О себе</label>
+        <textarea className="w-full glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent resize-none h-20" placeholder="Кратко опишите опыт и достижения..." />
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="flex-1 glass-card rounded-xl px-4 py-3 border border-dashed border-border flex items-center gap-3 cursor-pointer hover:border-blue-500/40 transition-colors">
+          <Icon name="Upload" size={16} className="text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">Загрузить PDF-резюме</span>
+          <span className="tag tag-blue ml-auto">до 5 МБ</span>
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <button className="btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold">Сохранить резюме</button>
+      </div>
+    </div>
+  );
+}
+
+function PortfolioPanel() {
+  const [items, setItems] = useState(PORTFOLIO_ITEMS);
+  return (
+    <div className="mt-4 border-t border-border/50 pt-4 space-y-4 animate-fade-in-up" style={{ opacity: 0 }}>
+      <div className="space-y-3">
+        {items.map((item, i) => (
+          <div key={i} className="glass-card rounded-xl p-4 flex items-start gap-3">
+            <div className="w-9 h-9 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+              <Icon name="FolderOpen" size={16} className="text-blue-400" />
+            </div>
+            <div className="flex-1">
+              <div className="font-semibold text-sm mb-0.5">{item.title}</div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="tag tag-violet">{item.category}</span>
+                <span className="text-xs text-muted-foreground">{item.year}</span>
+              </div>
+              <div className="text-xs text-emerald-400 flex items-center gap-1">
+                <Icon name="TrendingUp" size={10} />
+                {item.result}
+              </div>
+            </div>
+            <button onClick={() => setItems(items.filter((_, j) => j !== i))} className="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
+              <Icon name="Trash2" size={13} className="text-muted-foreground" />
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="glass-card rounded-xl p-4 border border-dashed border-border space-y-3">
+        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Добавить проект</div>
+        <div className="grid md:grid-cols-2 gap-3">
+          <input className="glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent" placeholder="Название проекта" />
+          <input className="glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent" placeholder="Результат / достижение" />
+        </div>
+        <div className="grid md:grid-cols-2 gap-3">
+          <input className="glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent" placeholder="Ссылка на проект (опционально)" />
+          <input className="glass-card rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-blue-500/50 transition-colors bg-transparent" placeholder="Год завершения" />
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-muted-foreground">{items.length} / 10 проектов добавлено</span>
+          <button className="btn-primary px-5 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+            <Icon name="Plus" size={14} />
+            Добавить
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function VerificationSection() {
   const done = VERIF_STEPS.filter(s => s.status === "done").length;
   const pct = Math.round((done / VERIF_STEPS.length) * 100);
+  const [expanded, setExpanded] = useState<number | null>(null);
+
+  const toggle = (id: number, status: string) => {
+    if (status === "locked") return;
+    setExpanded(prev => prev === id ? null : id);
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -635,32 +737,59 @@ function VerificationSection() {
 
       <div className="space-y-3">
         {VERIF_STEPS.map((s, i) => (
-          <div key={s.id} className={`glass-card rounded-2xl p-5 flex items-center gap-4 transition-all duration-300 animate-fade-in-up ${s.status === "locked" ? "opacity-50" : "glass-card-hover cursor-pointer"}`} style={{ animationDelay: `${i * 80}ms`, opacity: 0 }}>
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${s.status === "done" ? "bg-emerald-500/20" : s.status === "pending" ? "bg-blue-500/20" : "bg-white/5"}`}>
-              {s.status === "done" ? (
-                <Icon name="CheckCircle" size={22} className="text-emerald-400" />
-              ) : s.status === "pending" ? (
-                <Icon name={s.icon} size={22} className="text-blue-400" fallback="Circle" />
-              ) : (
-                <Icon name="Lock" size={22} className="text-muted-foreground" />
-              )}
+          <div
+            key={s.id}
+            className={`glass-card rounded-2xl transition-all duration-300 animate-fade-in-up ${s.status === "locked" ? "opacity-40" : "cursor-pointer"} ${expanded === s.id ? "border border-blue-500/25" : ""}`}
+            style={{ animationDelay: `${i * 70}ms`, opacity: 0 }}
+            onClick={() => toggle(s.id, s.status)}
+          >
+            <div className="p-5 flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${s.status === "done" ? "bg-emerald-500/20" : s.status === "pending" ? "bg-blue-500/20" : "bg-white/5"}`}>
+                {s.status === "done" ? (
+                  <Icon name="CheckCircle" size={22} className="text-emerald-400" />
+                ) : s.status === "pending" ? (
+                  <Icon name={s.icon} size={22} className="text-blue-400" fallback="Circle" />
+                ) : (
+                  <Icon name="Lock" size={22} className="text-muted-foreground" />
+                )}
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold text-sm mb-0.5">{s.title}</div>
+                <div className="text-xs text-muted-foreground">{s.desc}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                {s.status === "done" && <span className="tag tag-emerald">Готово</span>}
+                {s.status === "pending" && <span className="tag tag-amber">Заполнить</span>}
+                {s.status === "locked" && <Icon name="Lock" size={16} className="text-muted-foreground" />}
+                {s.status !== "locked" && (
+                  <Icon name={expanded === s.id ? "ChevronUp" : "ChevronDown"} size={16} className="text-muted-foreground" />
+                )}
+              </div>
             </div>
-            <div className="flex-1">
-              <div className="font-semibold text-sm mb-0.5">{s.title}</div>
-              <div className="text-xs text-muted-foreground">{s.desc}</div>
-            </div>
-            <div>
-              {s.status === "done" && <span className="tag tag-emerald">Готово</span>}
-              {s.status === "pending" && (
-                <button className="btn-primary px-4 py-2 rounded-lg text-xs font-semibold">Пройти</button>
-              )}
-              {s.status === "locked" && <Icon name="Lock" size={16} className="text-muted-foreground" />}
-            </div>
+
+            {expanded === s.id && s.id === 5 && (
+              <div className="px-5 pb-5">
+                <CVPanel />
+              </div>
+            )}
+            {expanded === s.id && s.id === 6 && (
+              <div className="px-5 pb-5">
+                <PortfolioPanel />
+              </div>
+            )}
+            {expanded === s.id && s.id !== 5 && s.id !== 6 && (
+              <div className="px-5 pb-5">
+                <div className="border-t border-border/50 pt-4 animate-fade-in-up" style={{ opacity: 0 }}>
+                  <p className="text-sm text-muted-foreground mb-3">Этот шаг будет доступен для заполнения после настройки.</p>
+                  <button className="btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold">Пройти шаг</button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      <div className="mt-6 glass-card rounded-2xl p-5 flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: "500ms", opacity: 0 }}>
+      <div className="mt-6 glass-card rounded-2xl p-5 flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: "600ms", opacity: 0 }}>
         <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0">
           <Icon name="Shield" size={22} className="text-blue-400" />
         </div>
